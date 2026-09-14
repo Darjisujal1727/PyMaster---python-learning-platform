@@ -1,4 +1,6 @@
 from pathlib import Path
+import os
+import tempfile
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -6,5 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent
 
 class Config:
     SECRET_KEY = "change-this-development-key"
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{BASE_DIR / 'database' / 'pymaster.db'}"
+    DATABASE_PATH = Path(tempfile.gettempdir()) / "pymaster.db" if os.getenv("VERCEL") else BASE_DIR / "database" / "pymaster.db"
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DATABASE_PATH}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
