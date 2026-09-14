@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block title %}{{ quiz[0] }} | PyMaster{% endblock %}
+
+{% block content %}
+<section class="section py-4">
+  <div class="container quiz-page" style="max-width: 900px;" data-quiz="{{ topic }}">
+    <a href="{{ url_for('main.quizzes') }}" class="back-link mb-3 text-decoration-none fw-semibold">
+      <i class="fa fa-arrow-left me-1"></i> All quizzes
+    </a>
+    <div class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill mb-2 fw-semibold fs-7 d-inline-block">
+      {{ quiz[1] }}
+    </div>
+    <h1 class="display-5 fw-bold mb-2 text-body-emphasis">{{ quiz[0] }}</h1>
+    <p class="text-muted mb-4 fs-6">10 questions this round. Answers and order change each time you start or retry.</p>
+
+    <!-- Quiz Results Summary Panel (Revealed upon submit) -->
+    <div id="quizResult" class="result-panel card border-0 shadow-sm p-4 mb-4 rounded-3" hidden></div>
+
+    <form id="topicQuiz">
+      {% for question, options, correct, explanation in quiz[2] %}
+      {% set question_index = loop.index0 %}
+      <fieldset class="quiz-card card border-0 shadow-sm p-4 mb-4 rounded-3" data-question-index="{{ question_index }}" data-correct="{{ correct }}" data-explanation="{{ explanation | forceescape }}">
+        <legend class="fw-bold fs-5 text-body-emphasis mb-3">{{ loop.index }}. {{ question }}</legend>
+        
+        <div class="options-group d-flex flex-column gap-2 mb-2">
+          {% for option in options %}
+          <label class="quiz-option-label border rounded-3 p-3 d-flex align-items-center cursor-pointer bg-body-tertiary">
+            <input type="radio" name="q{{ question_index }}" value="{{ loop.index0 }}" class="form-check-input me-3 my-0" data-correct="{{ correct }}" data-explanation="{{ explanation | forceescape }}" data-option-text="{{ option | forceescape }}">
+            <span class="option-text fs-6 text-body-emphasis">{{ option }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        
+        <div class="question-feedback rounded-3 p-3 fw-semibold border mt-3" hidden></div>
+      </fieldset>
+      {% endfor %}
+
+      <div class="d-flex gap-3 align-items-center mt-4">
+        <button class="btn btn-primary btn-lg px-5 py-3 rounded-3 fw-bold" type="submit" id="submitQuizBtn">
+          <i class="fa fa-check-circle me-2"></i>Finish Quiz & Check Answers
+        </button>
+        <button id="retryQuiz" type="button" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-3 fw-bold" hidden>
+          <i class="fa fa-redo me-2"></i>Retry Quiz
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
