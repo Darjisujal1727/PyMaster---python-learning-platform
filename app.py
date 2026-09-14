@@ -16,8 +16,10 @@ def create_app(config_class=Config):
     with app.app_context():
         db.create_all()
         from seed.curriculum import seed_curriculum
+        from services.lesson_content import add_resources
 
         seed_curriculum()
+        add_resources()
 
     return app
 

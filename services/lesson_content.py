@@ -519,6 +519,104 @@ def get_logical_quiz(concept):
     )
 
 
+CONCEPT_PROFILES = {
+    "if": {
+        "types_title": "The main decision patterns",
+        "types": [
+            {"name": "if", "detail": "Run a block only when a condition is true."},
+            {"name": "if / else", "detail": "Choose between two paths: the true path or the fallback path."},
+            {"name": "if / elif / else", "detail": "Test several alternatives in order; the first true branch wins."},
+            {"name": "Nested conditions", "detail": "Place one decision inside another when a second check depends on the first."},
+            {"name": "Conditional expression", "detail": "Write a short choice inline: value_if_true if condition else value_if_false."},
+        ],
+        "syntaxes": [
+            {"label": "Basic if", "code": "temperature = 28\nif temperature > 25:\n    print('It is warm.')"},
+            {"label": "if / elif / else", "code": "score = 82\nif score >= 90:\n    grade = 'A'\nelif score >= 80:\n    grade = 'B'\nelse:\n    grade = 'C'\nprint(grade)"},
+            {"label": "Inline conditional", "code": "age = 20\nmessage = 'adult' if age >= 18 else 'minor'\nprint(message)"},
+        ],
+        "what": "<p><strong>Conditional statements</strong> let a program choose what to do. Python evaluates a Boolean expression and executes only the indented block whose condition matches.</p>",
+        "why": "<p>Decisions make programs responsive. They let a checkout reject an invalid card, a game react to a move, and an app show different results for different users.</p>",
+        "simple": "An if statement is a question your program asks before it takes an action.",
+        "analogy": "Think of a security checkpoint: if you have a valid pass, enter; otherwise, follow the help route.",
+        "mistakes": ["Forgetting the colon after the condition.", "Using = when you mean ==.", "Mixing indentation levels inside the branch.", "Writing conditions in the wrong order so an earlier branch catches everything."],
+        "best": ["Use clear Boolean expressions.", "Keep branches short and move repeated work into functions.", "Handle the normal case first and use guard clauses for invalid input."],
+    },
+    "loop": {
+        "types_title": "The main loop patterns",
+        "types": [
+            {"name": "for loop", "detail": "Visit each item in an iterable such as a list, string, or range."},
+            {"name": "while loop", "detail": "Repeat while a Boolean condition remains true."},
+            {"name": "Nested loop", "detail": "Run one loop inside another for grids, tables, and combinations."},
+            {"name": "Loop controls", "detail": "Use break to stop, continue to skip one cycle, and pass as a placeholder."},
+            {"name": "Loop else", "detail": "Run an else block when a loop finishes normally without break."},
+        ],
+        "syntaxes": [
+            {"label": "for with range", "code": "for number in range(1, 4):\n    print(number)"},
+            {"label": "while with a changing condition", "code": "attempts = 0\nwhile attempts < 3:\n    print('Try', attempts + 1)\n    attempts += 1"},
+            {"label": "break and continue", "code": "for number in range(1, 6):\n    if number == 3:\n        continue\n    if number == 5:\n        break\n    print(number)"},
+        ],
+        "what": "<p>A <strong>loop</strong> repeats a focused block of code. A for loop works through known values; a while loop continues until its condition changes.</p>",
+        "why": "<p>Loops remove repetition. They power menus, data processing, validation attempts, reports, and almost every program that handles more than one item.</p>",
+        "simple": "A loop says: do this work again, but make progress toward a stopping point.",
+        "analogy": "A loop is a conveyor belt: inspect each package, skip damaged ones, and stop when the belt reaches the end.",
+        "mistakes": ["Creating an infinite while loop by never changing its condition.", "Using range() when you need the actual item values.", "Putting break or continue in the wrong branch.", "Changing a collection while iterating over it."],
+        "best": ["Give loop counters descriptive names.", "Keep the loop body small and extract complex work into a function.", "Make the stopping condition obvious and test an empty input."],
+    },
+    "string": {
+        "types_title": "String forms and useful operations",
+        "types": [
+            {"name": "Single-line string", "detail": "Text surrounded by single or double quotes."},
+            {"name": "Multiline string", "detail": "Text surrounded by triple quotes, useful for long text and docstrings."},
+            {"name": "f-string", "detail": "A formatted string that inserts expressions inside braces."},
+            {"name": "Raw string", "detail": "A string prefixed with r that treats backslashes mostly as literal characters."},
+        ],
+        "syntaxes": [
+            {"label": "Indexing and slicing", "code": "word = 'Python'\nprint(word[0])\nprint(word[1:4])\nprint(word[-1])"},
+            {"label": "Formatting", "code": "name = 'Ada'\nscore = 95\nprint(f'{name} scored {score}%')"},
+            {"label": "Common methods", "code": "text = '  learn python  '\nprint(text.strip().title())\nprint(text.split())"},
+        ],
+        "what": "<p>A <strong>string</strong> is an immutable sequence of characters. Python gives strings indexing, slicing, searching, formatting, and many transformation methods.</p>",
+        "why": "<p>Almost every application reads or produces text: names, messages, file paths, JSON, HTML, logs, and user input.</p>",
+        "simple": "A string is text that Python can inspect, combine, search, and format.",
+        "analogy": "Think of a string as a sentence made from tiles: you can read positions, take a section, or create a new arrangement, but you do not change the original tiles in place.",
+    },
+    "list": {
+        "types_title": "List patterns and collection operations",
+        "types": [
+            {"name": "Flat list", "detail": "An ordered, changeable collection of values."},
+            {"name": "Nested list", "detail": "A list containing other lists, useful for tables and grids."},
+            {"name": "List comprehension", "detail": "A compact expression for creating a transformed or filtered list."},
+            {"name": "List of dictionaries", "detail": "A practical structure for records such as users, products, or tasks."},
+        ],
+        "syntaxes": [
+            {"label": "Create and update", "code": "tasks = ['read', 'code']\ntasks.append('test')\ntasks[0] = 'learn'\nprint(tasks)"},
+            {"label": "Slice and loop", "code": "scores = [72, 88, 91, 64]\nfor score in scores[:3]:\n    print(score)"},
+            {"label": "Comprehension", "code": "numbers = [1, 2, 3, 4]\nsquares = [number ** 2 for number in numbers]\nprint(squares)"},
+        ],
+        "what": "<p>A <strong>list</strong> stores ordered values and can be changed after creation. It supports indexing, slicing, looping, and helpful methods.</p>",
+        "why": "<p>Lists are the everyday container for collections: shopping items, scores, search results, and records loaded from a file or API.</p>",
+        "simple": "A list is an ordered shelf of values that your program can rearrange and update.",
+        "analogy": "Think of a list as a labelled tray with numbered slots: you can inspect, replace, add, and remove items.",
+    },
+}
+
+
+def apply_concept_profile(guide_data, concept):
+    concept_lower = concept.lower()
+    profile = next((data for key, data in CONCEPT_PROFILES.items() if key in concept_lower), None)
+    if not profile:
+        guide_data["types_title"] = "Useful forms of this concept"
+        guide_data["types"] = [
+            {"name": "Core form", "detail": f"The basic way to use {concept} in a small Python program."},
+            {"name": "Combined form", "detail": f"Use {concept} together with variables, functions, and collections."},
+            {"name": "Defensive form", "detail": f"Validate inputs and handle edge cases when using {concept}."},
+            {"name": "Practical form", "detail": f"Apply {concept} to a small real-world task and inspect the result."},
+        ]
+        return guide_data
+    guide_data.update(profile)
+    return guide_data
+
+
 def build_dynamic_detailed_guide(concept, lesson):
     """Generates deep, comprehensive, multi-syntax and multi-example topic guides."""
     concept_slug = concept.lower().replace(' ', '_')
@@ -677,6 +775,8 @@ def guide(lesson):
     # If no static guide matched, generate dynamic rich guide
     if not matched_guide:
         matched_guide = build_dynamic_detailed_guide(concept, lesson)
+
+    matched_guide = apply_concept_profile(matched_guide, concept)
 
     # Attach real-world analogy fallback if missing
     if "analogy" not in matched_guide or not matched_guide["analogy"]:

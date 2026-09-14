@@ -73,6 +73,20 @@
       <div class="lh-lg fs-6 text-dark-emphasis">{{ guide.analogy | safe }}</div>
     </section>
 
+    <section class="lesson-card p-4 rounded-3 mb-4">
+      <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-sitemap text-primary me-2"></i>{{ guide.types_title or 'Types and forms' }}</h2>
+      <div class="row g-3">
+        {% for item in guide.types %}
+        <div class="col-md-6">
+          <div class="concept-type h-100 p-3 rounded-3 border bg-body-tertiary">
+            <h3 class="h5 fw-bold text-primary mb-2">{{ item.name }}</h3>
+            <p class="mb-0 text-body-secondary">{{ item.detail }}</p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+
     <!-- Section 5: Syntax & Blueprints -->
     <section class="lesson-card p-4 rounded-3 mb-4">
       <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-code text-warning me-2"></i>5. Syntax & Blueprints</h2>
@@ -184,7 +198,7 @@
     <!-- Section 15: Interactive Quiz -->
     <section class="lesson-card p-4 rounded-3 mb-4">
       <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-question-circle text-primary me-2"></i>15. Lesson Quiz</h2>
-      {% for item in lesson.quiz_questions %}
+      {% for item in lesson.quiz_questions if item.options and item.correct_answer %}
       <div class="quiz-box p-4 rounded-3 mb-3 border" data-correct="{{ item.correct_answer }}" data-explanation="{{ item.explanation }}">
         <p class="fs-5 fw-semibold text-body-emphasis mb-3"><b>{{ item.question }}</b></p>
         <div class="d-flex flex-wrap gap-2 mb-2">
@@ -193,6 +207,11 @@
           {% endfor %}
         </div>
         <div class="quiz-feedback rounded p-3 mt-3 fw-semibold" hidden></div>
+      </div>
+      {% else %}
+      <div class="empty-state p-4 text-center border rounded-3">
+        <i class="fa fa-circle-exclamation text-warning fs-3 mb-2"></i>
+        <p class="mb-0">This lesson quiz is being prepared. Refresh the page after the next update.</p>
       </div>
       {% endfor %}
     </section>
