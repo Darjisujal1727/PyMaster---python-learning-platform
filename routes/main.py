@@ -3,6 +3,7 @@ from flask import Blueprint, redirect, render_template, request, url_for
 from sqlalchemy import or_
 
 from models import Course, Lesson
+from seed.roadmap import ROADMAP_LEVELS as ROADMAP_CURRICULUM
 from services.example_bank import (
     EXAMPLES,
     get_example,
@@ -30,6 +31,8 @@ main_bp = Blueprint("main", __name__)
 
 RNG = SystemRandom()
 
+ROADMAP_LEVELS = [(level, title) for level, title, _ in ROADMAP_CURRICULUM]
+
 
 def build_quiz(topic):
     title, category = QUIZZES[topic]
@@ -51,7 +54,8 @@ def home():
 @main_bp.get("/learn")
 def learn():
     query = request.args.get("q", "").strip()
-    courses = Course.query.order_by(Course.id).all()
+    roadmap_numbers = [f"Level {level}" for level, _, _ in ROADMAP_CURRICULUM]
+    courses = Course.query.filter(Course.level.in_(roadmap_numbers)).order_by(Course.id).all()
     setup_lesson = Lesson.query.filter_by(title="Introduction to Installing Python").first()
     results = (
         Lesson.query.filter(
@@ -169,6 +173,7 @@ def projects():
     return render_template(
         "projects.html",
         projects=filtered_projects,
+        project_groups=grouped_projects(filtered_projects),
         project_count=len(PROJECTS),
         query=query,
         selected_level=level_filter,
@@ -192,7 +197,7 @@ def project_detail(slug):
 
 @main_bp.get("/roadmap")
 def roadmap():
-    return render_template("roadmap.html")
+    return render_template("roadmap.html", roadmap_levels=ROADMAP_LEVELS)
 
 
 @main_bp.get("/playground")

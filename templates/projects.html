@@ -1,69 +1,73 @@
 {% extends "index.html" %}
 
-{% block title %}Python Practice Projects | PyMaster{% endblock %}
+{% block title %}Python Project Lab | PyMaster{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="section project-page pt-4 pb-5">
   <div class="container">
-    <small>HANDS-ON LEARNING</small>
-    <h1>Python Practice Projects</h1>
-    <p class="lead">Build real-world Python applications, CLI utilities, scrapers, APIs, and games. All 100% focused on Python.</p>
-
-    <!-- Search & Filter Bar -->
-    <div class="row g-3 align-items-center mb-4 mt-2">
-      <div class="col-md-7">
-        <form class="search-box m-0" method="get">
-          <i class="fa fa-search"></i>
-          <input name="q" value="{{ query }}" placeholder="Search Python projects (e.g. game, API, scraper, OOP)...">
-          {% if selected_level %}
-          <input type="hidden" name="level" value="{{ selected_level }}">
-          {% endif %}
-          <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-      </div>
-      <div class="col-md-5 d-flex gap-2 justify-content-md-end flex-wrap">
-        <a href="{{ url_for('main.projects') }}" class="btn {{ 'btn-primary' if not selected_level else 'btn-outline-primary' }} btn-sm">All Levels</a>
-        <a href="{{ url_for('main.projects', level='Beginner', q=query) }}" class="btn {{ 'btn-primary' if selected_level == 'Beginner' else 'btn-outline-primary' }} btn-sm">Beginner</a>
-        <a href="{{ url_for('main.projects', level='Intermediate', q=query) }}" class="btn {{ 'btn-primary' if selected_level == 'Intermediate' else 'btn-outline-primary' }} btn-sm">Intermediate</a>
-        <a href="{{ url_for('main.projects', level='Advanced', q=query) }}" class="btn {{ 'btn-primary' if selected_level == 'Advanced' else 'btn-outline-primary' }} btn-sm">Advanced</a>
-      </div>
+    <div class="project-hero mb-5">
+      <span class="eyebrow"><i class="fa fa-flask me-2"></i>HANDS-ON PYTHON LAB</span>
+      <h1 class="display-5 fw-bold mt-3 mb-3">Build something you can show.</h1>
+      <p class="lead mb-0">Pick a challenge at the right level, study the concepts, and turn a blank file into a working Python project.</p>
     </div>
 
-    <!-- Project Cards Grid -->
-    <div class="row g-4 mt-1">
-      {% for project in projects %}
-      <div class="col-md-6 col-lg-4">
-        <article class="cardx project-card d-flex flex-column justify-content-between h-100">
-          <div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <span class="badge {{ 'bg-success' if project.level == 'Beginner' else 'bg-primary' if project.level == 'Intermediate' else 'bg-danger' }} fs-7">
-                {{ project.level }}
-              </span>
-              <small class="text-muted font-monospace">{{ project.category }}</small>
-            </div>
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.summary }}</p>
-
-            <div class="project-tags mb-4">
-              {% for concept in project.concepts[:3] %}
-              <span class="tag-pill">{{ concept }}</span>
-              {% endfor %}
-            </div>
-          </div>
-
-          <a href="{{ url_for('main.project_detail', slug=project.slug) }}" class="btn btn-primary w-100 mt-2">
-            View Project Details <i class="fa fa-arrow-right ms-1"></i>
-          </a>
-        </article>
+    <div class="project-toolbar d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+      <div>
+        <h2 class="h3 fw-bold mb-1">Project path</h2>
+        <p class="text-muted mb-0">{{ project_count }} projects from first scripts to production systems.</p>
       </div>
-      {% else %}
-      <div class="col-12 text-center py-5">
-        <h3>No projects match your search</h3>
-        <p>Try searching for a different topic like "game", "API", or "file".</p>
-        <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary mt-2">View All Projects</a>
-      </div>
+      <form class="search-box project-search" method="get">
+        <i class="fa fa-search"></i>
+        <input name="q" value="{{ query }}" placeholder="Search projects..." aria-label="Search projects">
+        {% if selected_level %}<input type="hidden" name="level" value="{{ selected_level }}">{% endif %}
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+    </div>
+
+    <nav class="project-filters d-flex flex-wrap gap-2 mb-5" aria-label="Project levels">
+      <a href="{{ url_for('main.projects', q=query) }}" class="btn {{ 'btn-primary' if not selected_level else 'btn-outline-primary' }}">All levels</a>
+      {% for level in ['Beginner', 'Intermediate', 'Advanced', 'Master'] %}
+      <a href="{{ url_for('main.projects', level=level, q=query) }}" class="btn {{ 'btn-primary' if selected_level == level else 'btn-outline-primary' }}">{{ level }}</a>
       {% endfor %}
+    </nav>
+
+    {% for level, level_projects in project_groups.items() %}
+    <section class="project-level mb-5" id="{{ level|lower }}">
+      <div class="project-level-heading">
+        <span class="level-dot level-{{ level|lower }}"></span>
+        <div>
+          <h2 class="h3 fw-bold mb-1">{{ level }}</h2>
+          <p class="text-muted mb-0">{{ level_projects|length }} projects to strengthen your {{ level|lower }} Python skills.</p>
+        </div>
+      </div>
+
+      <div class="row g-3 mt-1">
+        {% for project in level_projects %}
+        <div class="col-md-6 col-xl-4">
+          <article class="project-card cardx h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+              <span class="project-category">{{ project.category }}</span>
+              <i class="fa fa-arrow-up-right-from-square text-muted project-open-icon"></i>
+            </div>
+            <h3 class="h5 fw-bold">{{ project.title }}</h3>
+            <p class="text-muted small flex-grow-1">{{ project.summary }}</p>
+            <div class="project-tags mb-3">
+              {% for concept in project.concepts[:3] %}<span class="tag-pill">{{ concept }}</span>{% endfor %}
+            </div>
+            <a href="{{ url_for('main.project_detail', slug=project.slug) }}" class="btn btn-primary w-100">Open project <i class="fa fa-arrow-right ms-2"></i></a>
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+    {% else %}
+    <div class="empty-state cardx text-center p-5">
+      <i class="fa fa-search"></i>
+      <h3>No projects match your search</h3>
+      <p class="text-muted">Try “game”, “API”, “data”, or “web”.</p>
+      <a href="{{ url_for('main.projects') }}" class="btn btn-outline-primary">View all projects</a>
     </div>
+    {% endfor %}
   </div>
 </section>
 {% endblock %}

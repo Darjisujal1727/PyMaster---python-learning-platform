@@ -1419,11 +1419,84 @@ Metric Value: 10 | Status: Normal'''
     }
 ]
 
+
+def add_project_alias(source_title, slug, title):
+    source = next(project for project in PROJECTS if project["title"] == source_title)
+    alias = dict(source)
+    alias["slug"] = slug
+    alias["title"] = title
+    PROJECTS.append(alias)
+
+
+add_project_alias("Smart Calculator with Calculation History", "calculator", "Calculator")
+add_project_alias("Command-Line Task Manager", "to-do-list", "To-Do List")
+add_project_alias("Python Quiz Challenge Engine", "quiz-game", "Quiz Game")
+add_project_alias("Expense Tracker & Summary Generator", "expense-tracker", "Expense Tracker")
+add_project_alias("Automated File Organizer Utility", "file-organizer", "File Organizer")
+add_project_alias("News Headlines Scraper & Digest", "web-scraper", "Web Scraper")
+add_project_alias("RESTful API Engine with Flask", "rest-api", "REST API")
+add_project_alias("JWT Authentication & Decorator Middleware", "authentication-system", "Authentication System")
+add_project_alias("Password Generator & Strength Evaluator", "password-generator", "Password Generator")
+
+
+def reference_project(slug, title, level, category, concepts):
+    """Create a focused project brief for the roadmap's missing project ideas."""
+    code = f'''"""{title}: a small Python project starter."""
+
+def run_project():
+    records = [
+        {{"name": "Alice", "status": "ready"}},
+        {{"name": "Sam", "status": "working"}},
+    ]
+    for record in records:
+        print(f"{{record['name']}}: {{record['status']}}")
+
+
+if __name__ == "__main__":
+    run_project()
+'''
+    return {
+        "slug": slug,
+        "title": title,
+        "level": level,
+        "category": category,
+        "summary": f"Build a practical {title.lower()} and learn how Python concepts become a working application.",
+        "description": f"A guided {level.lower()} project for practicing {', '.join(concepts[:3])} in a focused, realistic workflow.",
+        "concepts": concepts,
+        "requirements": [
+            f"Create the core {title.lower()} workflow.",
+            "Keep the data in a clear Python structure.",
+            "Split repeated work into small functions.",
+            "Validate input and handle an empty state.",
+            "Add one improvement that makes the project your own.",
+        ],
+        "code": code,
+        "output": "Alice: ready\nSam: working",
+    }
+
+
+PROJECTS.extend([
+    reference_project("weather-app", "Weather App", "Intermediate", "API Application", ["HTTP requests", "JSON", "API error handling"]),
+    reference_project("chat-application", "Chat Application", "Intermediate", "Web Application", ["Flask", "sessions", "message storage"]),
+    reference_project("sqlite-management-system", "SQLite Management System", "Intermediate", "Database Application", ["SQLite", "CRUD operations", "parameterized SQL"]),
+    reference_project("flask-blog", "Flask Blog", "Advanced", "Web Application", ["Flask", "templates", "SQLite", "authentication"]),
+    reference_project("e-commerce-backend", "E-Commerce Backend", "Advanced", "Backend API", ["REST API", "database design", "authentication"]),
+    reference_project("ai-chatbot", "AI Chatbot", "Advanced", "AI Application", ["API integration", "prompt design", "conversation state"]),
+    reference_project("recommendation-system", "Recommendation System", "Advanced", "Machine Learning", ["data preparation", "similarity", "ranking"]),
+    reference_project("data-analysis-dashboard", "Data Analysis Dashboard", "Advanced", "Data Application", ["Pandas", "Matplotlib", "data visualization"]),
+    reference_project("machine-learning-application", "Machine Learning Application", "Advanced", "Machine Learning", ["features", "model training", "model evaluation"]),
+    reference_project("full-stack-python-application", "Full Stack Python Application", "Master", "Full Stack", ["Flask", "database design", "frontend integration"]),
+    reference_project("ai-application", "AI Application", "Master", "Artificial Intelligence", ["AI APIs", "prompt design", "production workflows"]),
+    reference_project("production-rest-api", "Production REST API", "Master", "Backend Engineering", ["REST architecture", "testing", "deployment"]),
+    reference_project("data-science-project", "Data Science Project", "Master", "Data Science", ["Pandas", "statistics", "visualization"]),
+    reference_project("automation-system", "Automation System", "Master", "Automation", ["scheduling", "file workflows", "logging"]),
+])
+
 BY_SLUG = {item["slug"]: item for item in PROJECTS}
 
-def grouped_projects():
+def grouped_projects(projects=None):
     groups = OrderedDict()
-    for item in PROJECTS:
+    for item in PROJECTS if projects is None else projects:
         groups.setdefault(item["level"], []).append(item)
     return groups
 

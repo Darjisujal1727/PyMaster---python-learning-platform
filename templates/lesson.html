@@ -38,14 +38,20 @@
 
     <h1 class="display-5 fw-bold mb-4 text-body-emphasis">{{ guide.concept }}</h1>
 
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2"><i class="fa fa-book-open me-1"></i>Plain-language theory</span>
+      <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2"><i class="fa fa-code me-1"></i>8 guided examples</span>
+      <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2"><i class="fa fa-flask me-1"></i>Try it yourself</span>
+    </div>
+
     <div class="overview-box p-4 rounded-3 mb-4">
-      <h5 class="fw-bold text-primary mb-2"><i class="fa fa-lightbulb me-2"></i>Quick Overview</h5>
+      <h5 class="fw-bold text-primary mb-2"><i class="fa fa-lightbulb me-2"></i>Before you code</h5>
       <div class="fs-6 lh-base text-body-emphasis">{{ guide.simple | safe }}</div>
     </div>
 
     <!-- Section 1: What is this? -->
     <section class="lesson-card p-4 rounded-3 mb-4">
-      <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-question-circle text-primary me-2"></i>1. What is this?</h2>
+      <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-question-circle text-primary me-2"></i>The idea in plain English</h2>
       <div class="lh-lg fs-6 text-body-secondary">{{ guide.what | safe }}</div>
     </section>
 
@@ -88,7 +94,7 @@
 
     <!-- Section 6: Practical Code Demonstrations & Examples -->
     <section class="lesson-card p-4 rounded-3 mb-4">
-      <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-laptop-code text-danger me-2"></i>6. Practical Code Demonstrations & Examples</h2>
+      <h2 class="h3 fw-bold text-body-emphasis border-bottom pb-3 mb-3"><i class="fa fa-laptop-code text-danger me-2"></i>8 examples to make it click</h2>
       
       {% if guide.examples %}
         {% for eg in guide.examples %}

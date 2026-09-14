@@ -1,60 +1,122 @@
 {% extends "index.html" %}
 
-{% block title %}PyMaster | Python Curriculum{% endblock %}
+{% block title %}Learn Python | PyMaster{% endblock %}
 
 {% block content %}
-<section class="section">
+<section class="section pt-4 pb-5">
   <div class="container">
-    <small>THE COMPLETE PATH</small>
-    <h1>Python curriculum</h1>
-    <p>From zero knowledge to Python mastery.</p>
-    <form class="search-box" method="get">
-      <i class="fa fa-search"></i>
-      <input name="q" value="{{ query }}" placeholder="Search lessons, e.g. variables or Flask">
-      <button class="btn btn-primary">Search</button>
-    </form>
-
-    {% if setup_lesson %}
-    <article class="cardx mt-4 border-primary">
-      <small>START HERE</small>
-      <h2>Install Python and run it in VS Code</h2>
-      <p>Set up Python, choose the correct interpreter, create a virtual environment, and run your first <code>.py</code> file.</p>
-      <div class="code-box p-3 rounded-3 font-monospace mb-3">
-        <pre class="m-0"><code>py --version
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python hello.py</code></pre>
+    <div class="learn-hero p-4 p-lg-5 mb-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="eyebrow"><i class="fa fa-compass me-2"></i>YOUR PYTHON JOURNEY</span>
+          <h1 class="display-4 fw-bold mt-3 mb-3">Learn by building, one clear idea at a time.</h1>
+          <p class="lead mb-0">A carefully ordered path from your first Python command to data, web, automation, and AI projects. Every lesson explains the idea, shows it in action, and gives you something to try.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="learn-hero-note">
+            <i class="fa fa-rocket"></i>
+            <strong>Start with curiosity.</strong>
+            <span>Small experiments become real skills surprisingly fast.</span>
+          </div>
+        </div>
       </div>
-      <a href="{{ url_for('main.lesson', slug=setup_lesson.slug) }}">
-        Open the complete installation guide <i class="fa fa-arrow-right"></i>
-      </a>
+    </div>
+
+    <div class="row g-3 mb-5">
+      <div class="col-6 col-lg-3">
+        <div class="learn-stat cardx h-100"><span class="stat-icon text-primary"><i class="fa fa-layer-group"></i></span><strong>{{ courses|length }}</strong><small>roadmap levels</small></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="learn-stat cardx h-100"><span class="stat-icon text-success"><i class="fa fa-book-open"></i></span><strong>{{ courses|map(attribute='modules')|map('length')|sum }}</strong><small>learning modules</small></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="learn-stat cardx h-100"><span class="stat-icon text-warning"><i class="fa fa-code"></i></span><strong>8+</strong><small>examples per lesson</small></div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="learn-stat cardx h-100"><span class="stat-icon text-danger"><i class="fa fa-laptop-code"></i></span><strong>1</strong><small>skill-building path</small></div>
+      </div>
+    </div>
+
+    <div class="learn-toolbar d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+      <div>
+        <span class="eyebrow text-primary">THE COMPLETE PATH</span>
+        <h2 class="h2 fw-bold mb-1 mt-2">Choose your next level</h2>
+        <p class="text-muted mb-0">Follow the order or search for exactly what you need today.</p>
+      </div>
+      <form class="search-box learn-search" method="get">
+        <i class="fa fa-search"></i>
+        <input name="q" value="{{ query }}" placeholder="Search variables, Flask, lists..." aria-label="Search lessons">
+        <button class="btn btn-primary" type="submit">Search</button>
+      </form>
+    </div>
+
+    {% if query %}
+    <section class="search-results mb-5" aria-labelledby="search-heading">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 id="search-heading" class="h4 fw-bold mb-0">Results for “{{ query }}”</h2>
+        <a href="{{ url_for('main.learn') }}" class="small text-decoration-none">Clear search</a>
+      </div>
+      <div class="row g-3">
+        {% for lesson in results %}
+        <div class="col-md-6 col-lg-4">
+          <a class="result result-card h-100" href="{{ url_for('main.lesson', slug=lesson.slug) }}">
+            <span class="result-level">{{ lesson.module.course.level }}</span>
+            <strong>{{ lesson.title.replace('Introduction to ', '') }}</strong>
+            <span>{{ lesson.module.course.title.split(' - ', 1)[1] }} · {{ lesson.module.title }}</span>
+            <i class="fa fa-arrow-right"></i>
+          </a>
+        </div>
+        {% else %}
+        <div class="col-12"><div class="empty-state cardx"><i class="fa fa-search"></i><h3>No lesson found yet</h3><p>Try a broader phrase such as “function”, “data”, or “web”.</p></div></div>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% if setup_lesson and not query %}
+    <article class="start-card cardx border-primary mb-5 p-4 p-lg-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <span class="eyebrow text-primary">LEVEL 1 · START HERE</span>
+          <h2 class="h2 fw-bold mt-2">Set up Python and make your first program</h2>
+          <p class="text-muted mb-0">Install the tools, choose your interpreter, and run a real <code>.py</code> file before the concepts begin.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a href="{{ url_for('main.lesson', slug=setup_lesson.slug) }}" class="btn btn-primary btn-lg">Open first lesson <i class="fa fa-arrow-right ms-2"></i></a>
+        </div>
+      </div>
     </article>
     {% endif %}
 
-    {% if query %}
-    <h2 class="mt-5">Search results for "{{ query }}"</h2>
-    {% for lesson in results %}
-    <a class="result" href="{{ url_for('main.lesson', slug=lesson.slug) }}">
-      <b>{{ lesson.title }}</b>
-      <span>{{ lesson.module.course.title }} • {{ lesson.module.title }}</span>
-    </a>
-    {% else %}
-    <p>No lessons found. Try another word.</p>
-    {% endfor %}
-    {% endif %}
-
-    <div class="row g-4 mt-3">
+    <div class="curriculum-list">
       {% for course in courses %}
-      <div class="col-md-6 col-lg-4">
-        <article class="cardx">
-          <small>{{ course.level }}</small>
-          <h3>{{ course.title.split(' - ', 1)[1] }}</h3>
-          <p>{{ course.description }}</p>
-          <a href="{{ url_for('main.lesson', slug=course.modules[0].lessons[0].slug) }}">
-            Start this level <i class="fa fa-arrow-right"></i>
-          </a>
-        </article>
-      </div>
+      {% set first_lesson = course.modules[0].lessons[0] if course.modules and course.modules[0].lessons else none %}
+      <article class="course-row cardx mb-3" id="level-{{ loop.index0 }}">
+        <div class="course-marker">{{ loop.index0 }}</div>
+        <div class="course-content">
+          <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+            <div>
+              <span class="eyebrow text-primary">{{ course.level }}</span>
+              <h2 class="h3 fw-bold mt-2 mb-2">{{ course.title.split(' - ', 1)[1] }}</h2>
+              <p class="text-muted mb-3">{{ course.description }}</p>
+            </div>
+            {% if first_lesson %}
+            <div class="course-action">
+              <a href="{{ url_for('main.lesson', slug=first_lesson.slug) }}" class="btn btn-outline-primary">Start level <i class="fa fa-arrow-right ms-2"></i></a>
+            </div>
+            {% endif %}
+          </div>
+          <div class="module-strip">
+            {% for module in course.modules %}
+            {% if module.lessons %}
+            <a href="{{ url_for('main.lesson', slug=module.lessons[0].slug) }}" class="module-chip">
+              <span>{{ '%02d'|format(loop.index) }}</span>{{ module.title.replace('Module ' ~ loop.index ~ ': ', '') }}<i class="fa fa-chevron-right"></i>
+            </a>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </article>
       {% endfor %}
     </div>
   </div>

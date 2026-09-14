@@ -15,10 +15,9 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
-        if not Course.query.first():
-            from seed.curriculum import seed_curriculum
+        from seed.curriculum import seed_curriculum
 
-            seed_curriculum()
+        seed_curriculum()
 
     return app
 

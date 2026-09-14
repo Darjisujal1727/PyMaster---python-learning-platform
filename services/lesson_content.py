@@ -1,6 +1,7 @@
 """Presentation helpers for deep, comprehensive PyMaster lessons."""
 
 import json
+import re
 from models import db, CodeExample, PracticeProblem, QuizQuestion
 
 ANALOGIES = {
@@ -594,6 +595,73 @@ def build_dynamic_detailed_guide(concept, lesson):
     }
 
 
+def ensure_examples(concept, lesson, examples):
+    """Give every lesson a consistent set of eight approachable examples."""
+    examples = list(examples or [])[:8]
+    value_name = re.sub(r"[^a-zA-Z0-9_]", "_", concept.lower().replace("+", "and")).strip("_")
+    patterns = [
+        (
+            "A tiny first experiment",
+            f"{value_name} = \"Python makes ideas testable\"\nprint({value_name})",
+            f"<p>Start with one value, give it a readable name, and print it. This creates a small experiment you can change without feeling lost.</p>",
+            "Python makes ideas testable",
+        ),
+        (
+            "Transforming a small collection",
+            "items = [\"learn\", \"build\", \"share\"]\nfor item in items:\n    print(item.title())",
+            f"<p>This example uses a short collection and a loop to apply one operation repeatedly. The same shape appears often when working with {concept}.</p>",
+            "Learn\nBuild\nShare",
+        ),
+        (
+            "Putting the idea in a function",
+            f"def explain_{value_name}(topic):\n    return f\"Today we are learning {{topic}}\"\n\nprint(explain_{value_name}(\"{concept}\"))",
+            "<p>A function gives the idea a name and makes it reusable. Inputs go between the parentheses, and return sends a result back.</p>",
+            f"Today we are learning {concept}",
+        ),
+        (
+            "Making a useful decision",
+            f"score = 8\nif score >= 5:\n    print(\"{concept}: ready to practice\")\nelse:\n    print(\"Review the basics first\")",
+            "<p>The program checks a condition before choosing an output. Try changing the score and predict which branch will run.</p>",
+            f"{concept}: ready to practice",
+        ),
+        (
+            "Combining related values",
+            f"lesson = {{\"topic\": \"{concept}\", \"minutes\": 15}}\nprint(lesson[\"topic\"])\nprint(lesson[\"minutes\"]) ",
+            "<p>A dictionary keeps related values together under meaningful keys, which makes small programs easier to read than a group of unrelated variables.</p>",
+            f"{concept}\n15",
+        ),
+        (
+            "Handling an unexpected value",
+            "text = \"not a number\"\ntry:\n    number = int(text)\nexcept ValueError:\n    number = 0\nprint(number)",
+            "<p>Real programs receive imperfect input. The try/except block keeps the program running and gives the unexpected case a sensible fallback.</p>",
+            "0",
+        ),
+        (
+            "Building a small result",
+            f"topics = [\"{concept}\", \"practice\", \"feedback\"]\ncompleted = [topic.upper() for topic in topics]\nprint(completed)",
+            "<p>This compact transformation turns each item into a new result. Read the expression from left to right: choose an item, transform it, and collect the results.</p>",
+            f"['{concept.upper()}', 'PRACTICE', 'FEEDBACK']",
+        ),
+        (
+            "A mini challenge to extend",
+            f"def progress(done, total):\n    return round(done / total * 100)\n\nprint(f\"{concept}: {{progress(3, 4)}}% complete\")",
+            "<p>This final example turns the concept into a tiny progress feature. Change the numbers, add validation, and make the result your own.</p>",
+            f"{concept}: 75% complete",
+        ),
+    ]
+
+    for title, code, breakdown, output in patterns:
+        if len(examples) >= 8:
+            break
+        examples.append({
+            "title": f"Example {len(examples) + 1}: {title}",
+            "code": code,
+            "breakdown": breakdown,
+            "output": output,
+        })
+    return examples
+
+
 def guide(lesson):
     concept = concept_name(lesson)
     concept_lower = concept.lower()
@@ -617,6 +685,8 @@ def guide(lesson):
             f"Think of {concept} as a reliable building block in your software system."
         )
         matched_guide["analogy"] = analogy_text
+
+    matched_guide["examples"] = ensure_examples(concept, lesson, matched_guide.get("examples"))
 
     return matched_guide
 
