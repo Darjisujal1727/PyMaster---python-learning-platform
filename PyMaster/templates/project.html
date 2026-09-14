@@ -1,0 +1,95 @@
+{% extends "index.html" %}
+
+{% block title %}{{ project.title }} | Python Project | PyMaster{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width: 920px;">
+    <a href="{{ url_for('main.projects') }}" class="back-link mb-3 d-inline-block">
+      <i class="fa fa-arrow-left"></i> Back to all projects
+    </a>
+
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <span class="badge {{ 'bg-success' if project.level == 'Beginner' else 'bg-primary' if project.level == 'Intermediate' else 'bg-danger' }}">
+        {{ project.level }}
+      </span>
+      <span class="badge bg-secondary">{{ project.category }}</span>
+    </div>
+
+    <h1 class="mt-2 mb-3">{{ project.title }}</h1>
+    <p class="lead text-muted">{{ project.description }}</p>
+
+    <!-- Concepts Covered -->
+    <div class="cardx p-4 mb-4 mt-4">
+      <h4 class="mb-3"><i class="fa fa-brain text-primary me-2"></i>Python Concepts You Learn</h4>
+      <div class="d-flex flex-wrap gap-2">
+        {% for concept in project.concepts %}
+        <span class="tag-pill">{{ concept }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Requirements & Step-by-Step Instructions -->
+    <div class="cardx p-4 mb-4">
+      <h4 class="mb-3"><i class="fa fa-list-check text-primary me-2"></i>Project Requirements & Tasks</h4>
+      <ul class="mb-0 ps-3 text-muted">
+        {% for req in project.requirements %}
+        <li class="mb-2">{{ req }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Source Code -->
+    <h3 class="mt-5"><i class="fa fa-code me-2"></i>Complete Python Solution Code</h3>
+    <div class="src-block">
+      <button type="button" class="src-copy" id="copyProjectCode" title="Copy code">
+        <i class="fa fa-copy"></i>
+      </button>
+      <pre><code class="language-python" id="projectSource">{{ project.code }}</code></pre>
+    </div>
+
+    <!-- Expected Output -->
+    <h3 class="mt-4"><i class="fa fa-terminal me-2"></i>Expected Program Output</h3>
+    <div class="output p-3 rounded-3 font-monospace mb-5" style="white-space: pre-wrap;">{{ project.output }}</div>
+
+    <!-- Navigation Pager -->
+    <div class="lesson-pager">
+      {% if previous %}
+      <a href="{{ url_for('main.project_detail', slug=previous.slug) }}">
+        <small>Previous project</small>
+        <b><i class="fa fa-arrow-left"></i> {{ previous.title }}</b>
+      </a>
+      {% endif %}
+      {% if next_project %}
+      <a class="ms-auto text-end" href="{{ url_for('main.project_detail', slug=next_project.slug) }}">
+        <small>Next project</small>
+        <b>{{ next_project.title }} <i class="fa fa-arrow-right"></i></b>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  if (window.hljs) hljs.highlightAll();
+  const copyBtn = document.querySelector("#copyProjectCode");
+  const codeEl = document.querySelector("#projectSource");
+  if (copyBtn && codeEl) {
+    copyBtn.onclick = async () => {
+      await navigator.clipboard.writeText(codeEl.textContent);
+      const toast = document.createElement("div");
+      toast.className = "toast show";
+      toast.innerHTML = '<div class="toast-body">Project code copied!</div>';
+      document.querySelector(".toast-container")?.append(toast);
+      setTimeout(() => toast.remove(), 1800);
+    };
+  }
+</script>
+{% endblock %}
