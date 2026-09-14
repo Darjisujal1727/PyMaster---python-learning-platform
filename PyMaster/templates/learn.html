@@ -1,0 +1,62 @@
+{% extends "index.html" %}
+
+{% block title %}PyMaster | Python Curriculum{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <small>THE COMPLETE PATH</small>
+    <h1>Python curriculum</h1>
+    <p>From zero knowledge to Python mastery.</p>
+    <form class="search-box" method="get">
+      <i class="fa fa-search"></i>
+      <input name="q" value="{{ query }}" placeholder="Search lessons, e.g. variables or Flask">
+      <button class="btn btn-primary">Search</button>
+    </form>
+
+    {% if setup_lesson %}
+    <article class="cardx mt-4 border-primary">
+      <small>START HERE</small>
+      <h2>Install Python and run it in VS Code</h2>
+      <p>Set up Python, choose the correct interpreter, create a virtual environment, and run your first <code>.py</code> file.</p>
+      <div class="code-box p-3 rounded-3 font-monospace mb-3">
+        <pre class="m-0"><code>py --version
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python hello.py</code></pre>
+      </div>
+      <a href="{{ url_for('main.lesson', slug=setup_lesson.slug) }}">
+        Open the complete installation guide <i class="fa fa-arrow-right"></i>
+      </a>
+    </article>
+    {% endif %}
+
+    {% if query %}
+    <h2 class="mt-5">Search results for "{{ query }}"</h2>
+    {% for lesson in results %}
+    <a class="result" href="{{ url_for('main.lesson', slug=lesson.slug) }}">
+      <b>{{ lesson.title }}</b>
+      <span>{{ lesson.module.course.title }} • {{ lesson.module.title }}</span>
+    </a>
+    {% else %}
+    <p>No lessons found. Try another word.</p>
+    {% endfor %}
+    {% endif %}
+
+    <div class="row g-4 mt-3">
+      {% for course in courses %}
+      <div class="col-md-6 col-lg-4">
+        <article class="cardx">
+          <small>{{ course.level }}</small>
+          <h3>{{ course.title.split(' - ', 1)[1] }}</h3>
+          <p>{{ course.description }}</p>
+          <a href="{{ url_for('main.lesson', slug=course.modules[0].lessons[0].slug) }}">
+            Start this level <i class="fa fa-arrow-right"></i>
+          </a>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}
