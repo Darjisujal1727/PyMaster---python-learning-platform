@@ -1,7 +1,7 @@
 from flask import Flask
 
 from config import Config
-from models import db
+from models import Course, db
 from routes.main import main_bp
 
 
@@ -15,6 +15,10 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
+        if not Course.query.first():
+            from seed.curriculum import seed_curriculum
+
+            seed_curriculum()
 
     return app
 
